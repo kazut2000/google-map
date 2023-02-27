@@ -30,6 +30,22 @@ function huga() {
   console.log("huga");
 }
 
+const locations = [
+    {
+        name: "秋葉原オフィス",
+        location: {
+          lat: 35.69731,
+          lng: 139.7747,
+        },
+    },
+    {
+        name: "岩本町オフィス",
+        location: {
+          lat: 35.69397,
+          lng: 139.7762,
+        },
+    },
+];
 
 export const App = () => {
   console.log("hoge");
@@ -43,21 +59,17 @@ export const App = () => {
         zoom={15}
       >
         { /* Child components, such as markers, info windows, etc. */}
-        <div onClick={huga}>
-          <InfoWindow position={positionAkiba}>
-          <div style={divStyle}>
-            <h1>秋葉原オフィス</h1>
-          </div>
-          </InfoWindow>
-        </div>
-
-        <>
-          <InfoWindow position={positionIwamotocho}>
-          <div style={divStyle}>
-            <h1>岩本町オフィス</h1>
-          </div>
-        </InfoWindow>
-        </>
+        {
+          locations.map((place, index) => {
+            return (
+              <InfoWindow position={place.location} key={index}>
+                <div style={divStyle}>
+                  <h1>{place.name}</h1>
+                </div>
+              </InfoWindow>
+            )
+          })
+        }
       </GoogleMap>
     </LoadScript>
   )
