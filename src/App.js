@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, InfoWindow } from '@react-google-maps/api';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/system/Box';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 // Mapの画面サイズを全画面に設定
 const containerStyle = {
@@ -23,11 +25,17 @@ const divStyle = {
 };
 
 export const App = () => {
+  const [value, setValue] = useState('default');
   const [locations, setLocations] = useState({});
-  const [open, setopen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [restaurant, setRestaurant] = useState({});
 
-  const toggleOpen = () => {
-    setopen(!open);
+  const toggleOpen = (id, name) => {
+
+    setOpen(!open);
+    open ? setRestaurant({}) : setRestaurant({ id, name });
+    console.log(id, name);
+    console.log(restaurant)
   }
 
   // DBからlocationを取得する関数
@@ -61,7 +69,7 @@ export const App = () => {
           {
             Object.keys(locations).length && locations.map((place, index) => {
               return (
-                <div onClick={toggleOpen} key={index}>
+                <div onClick={()=>{toggleOpen(place.id,place.name)}} key={index}>
                   <InfoWindow position={{lat: Number(place.lat_location), lng: Number(place.lng_location)}}>
                     <div style={divStyle}>
                       <h1>{place.name}</h1>
@@ -75,9 +83,29 @@ export const App = () => {
       </LoadScript>
 
       <Drawer anchor='left' open={open} onClose={toggleOpen}>
-        <Box sx={{ width: '30vw' }}>
-          <p>hello</p>
+        <Box sx={{ width: '30vw'}}></Box>
+        <Box sx={{ fontSize: 'h2.fontSize', mx: 'auto' }}>
+        {restaurant.name}
         </Box>
+        <Box sx={{ border: 1 }} />
+        <Box sx={{mx: 'auto' }}>
+          <TextField
+            id="filled-textarea"
+            label="Multiline Placeholder"
+            placeholder="Placeholder"
+            multiline
+            variant="filled"
+            onChange={(event) => setValue(event.target.value)}
+          />
+        </Box>
+        <Button
+          onClick={() => {
+            alert(value);
+          }}
+        >
+          POST
+        </Button>
+        <Box sx={{ border: 1 }} />
       </Drawer>
     </>
   )
