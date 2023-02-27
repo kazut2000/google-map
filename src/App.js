@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, InfoWindow } from '@react-google-maps/api';
 import Drawer from '@mui/material/Drawer';
+import Box from '@mui/system/Box';
 
 // Mapの画面サイズを全画面に設定
 const containerStyle = {
@@ -81,7 +82,9 @@ export const App = () => {
       </LoadScript>
 
       <Drawer anchor='left' open={open} onClose={toggleOpen}>
-        <p>hello</p>
+        <Box sx={{ width: '30vw' }}>
+          <p>hello</p>
+        </Box>
       </Drawer>
     </>
   )
