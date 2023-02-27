@@ -53,7 +53,7 @@ class App extends Component {
     return (
       <div>
         <header>
-          <h1>Iizuka Map</h1>
+          <h1>Iizuka Map 1</h1>
           <label style={labelStyle}>Input LocationName: <input type='text' onChange={(e) => this.changeLocationName(e)} value={this.state.locationName} onKeyPress={(e) => this.changeLocationName(e)}/></label>
         </header>
         <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}>
