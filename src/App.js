@@ -25,35 +25,65 @@ const divStyle = {
 };
 
 export const App = () => {
-  const [value, setValue] = useState('default');
+  const [value, setValue] = useState('');
   const [locations, setLocations] = useState({});
   const [open, setOpen] = useState(false);
   const [restaurant, setRestaurant] = useState({});
+  const [rsreviews, setRsreviews] = useState({});
 
   const toggleOpen = (id, name) => {
-
     setOpen(!open);
     open ? setRestaurant({}) : setRestaurant({ id, name });
-    console.log(id, name);
-    console.log(restaurant)
+    if (!open) { getRsreview(id); }
   }
 
-  // DBからlocationを取得する関数
-  const getApiData = async () => {
+  // APIからlocationを取得する関数
+  const getLocation = async () => {
     const response = await fetch(
       "https://real-hound-51.hasura.app/api/rest/location",
       {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          "x-hasura-admin-secret" : `${process.env.REACT_APP_ID_TOKEN}`
+          'x-hasura-admin-secret' : `${process.env.REACT_APP_ID_TOKEN}`
         },
       }
     ).then((response) => response.json());
     setLocations(response.locations);
   };
 
+  // APIからrereviewを取得する関数
+  const getRsreview = async (locations_id) => {
+    const response = await fetch(
+      `https://real-hound-51.hasura.app/api/rest/rsreview?_eq=${locations_id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-hasura-admin-secret' : `${process.env.REACT_APP_ID_TOKEN}`
+        },
+      }
+    ).then((response) => response.json());
+    setRsreviews(response.rsreview);
+  };
+
+  // APIにrereviewを登録する関数
+  const postRsreview = async (comment, locations_id) => {
+    const response = await fetch(
+      `https://real-hound-51.hasura.app/api/rest/rsreview?comment=${comment}&locations_id=${locations_id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-hasura-admin-secret' : `${process.env.REACT_APP_ID_TOKEN}`
+        },
+      }
+    ).then((response) => response.json());
+    console.log("postRsreview", response);
+  };
+
   useEffect(() => {
-    getApiData()
+    getLocation()
   }, [])
 
   return (
@@ -99,13 +129,22 @@ export const App = () => {
           />
         </Box>
         <Button
-          onClick={() => {
-            alert(value);
-          }}
+          onClick={() => {postRsreview(value,restaurant.id)}}
         >
           POST
         </Button>
         <Box sx={{ border: 1 }} />
+        {
+            Object.keys(rsreviews).length && rsreviews.map((reviews, index) => {
+              return (
+                <div key={index}>
+                  <Box sx={{ p: 2, border: '1px dashed grey' }}>
+                    {reviews.comment}
+                  </Box>
+                </div>
+              )
+            })
+          }
       </Drawer>
     </>
   )
