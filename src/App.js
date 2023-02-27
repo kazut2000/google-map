@@ -79,7 +79,7 @@ export const App = () => {
         },
       }
     ).then((response) => response.json());
-    console.log("postRsreview", response);
+    toggleOpen();
   };
 
   useEffect(() => {
