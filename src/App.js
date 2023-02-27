@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, InfoWindow } from '@react-google-maps/api';
 
@@ -25,26 +26,27 @@ function logPlace(name) {
   console.log(name);
 }
 
-// おすすめの飲食店(place))の配列
-// TODO データベースから取得する
-const locations = [
-    {
-        name: "本場インド料理 ルパ",
-        location: {
-          lat: 33.652219,
-          lng: 130.6794,
-        },
-    },
-    {
-        name: "麺屋 すみ岡",
-        location: {
-          lat: 33.6504,
-          lng: 130.6694,
-        },
-    },
-];
-
 export const App = () => {
+  const [locations, setLocations] = useState({});
+
+  // DBからlocationを取得する関数
+  const getApiData = async () => {
+    const response = await fetch(
+      "https://real-hound-51.hasura.app/api/rest/location",
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          "x-hasura-admin-secret" : `${process.env.REACT_APP_ID_TOKEN}`
+        },
+      }
+    ).then((response) => response.json());
+    setLocations(response.locations);
+  };
+
+  useEffect(() => {
+    getApiData()
+  }, [])
+
   return (
     <LoadScript
       googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}
@@ -56,10 +58,10 @@ export const App = () => {
       >
         { /* Child components, such as markers, info windows, etc. */}
         {
-          locations.map((place, index) => {
+          Object.keys(locations).length && locations.map((place, index) => {
             return (
               <div onClick={()=>{logPlace(place.name)}} key={index}>
-                <InfoWindow position={place.location}>
+                <InfoWindow position={{lat: Number(place.lat_location), lng: Number(place.lng_location)}}>
                   <div style={divStyle}>
                     <h1>{place.name}</h1>
                   </div>
