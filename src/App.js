@@ -7,42 +7,33 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 35.69575,
-  lng: 139.77521,
+  lat: 33.6537,
+  lng: 130.6722,
 };
 
-const positionAkiba = {
-  lat: 35.69731,
-  lng: 139.7747,
-};
-
-const positionIwamotocho = {
-  lat: 35.69397,
-  lng: 139.7762,
-};
 
 const divStyle = {
   background: "white",
   fontSize: 7.5,
 };
 
-function huga() {
-  console.log("huga");
+function huga(name) {
+  console.log(name);
 }
 
 const locations = [
     {
-        name: "秋葉原オフィス",
+        name: "本場インド料理 ルパ",
         location: {
-          lat: 35.69731,
-          lng: 139.7747,
+          lat: 33.652219,
+          lng: 130.6794,
         },
     },
     {
-        name: "岩本町オフィス",
+        name: "麺屋 すみ岡",
         location: {
-          lat: 35.69397,
-          lng: 139.7762,
+          lat: 33.6504,
+          lng: 130.6694,
         },
     },
 ];
@@ -62,11 +53,13 @@ export const App = () => {
         {
           locations.map((place, index) => {
             return (
-              <InfoWindow position={place.location} key={index}>
-                <div style={divStyle}>
-                  <h1>{place.name}</h1>
-                </div>
-              </InfoWindow>
+              <div onClick={()=>{huga(place.name)}} key={index}>
+                <InfoWindow position={place.location}>
+                  <div style={divStyle}>
+                    <h1>{place.name}</h1>
+                  </div>
+                </InfoWindow>
+              </div>
             )
           })
         }
