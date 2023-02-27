@@ -22,12 +22,6 @@ const divStyle = {
   fontSize: 7.5,
 };
 
-// InfoWindowをクリックした時の処理
-// TODO 関数名は処理によって変更する
-function logPlace(name) {
-  console.log(name);
-}
-
 export const App = () => {
   const [locations, setLocations] = useState({});
   const [open, setopen] = useState(false);
@@ -64,7 +58,6 @@ export const App = () => {
           center={center}
           zoom={15}
         >
-          { /* Child components, such as markers, info windows, etc. */}
           {
             Object.keys(locations).length && locations.map((place, index) => {
               return (
