@@ -49,4 +49,7 @@ You may also see any lint errors in the console.
   | comment | text | - |
 
 ### インフラ
-初めてでも簡単にデプロイできるVercelにReactをデプロイしました。
+初めてでも簡単にデプロイできるVercelにReactをデプロイしました。  
+最初にCI/CDを構築したので、発表前にデプロイで焦ることがありませんでした。
+<img width="960" alt="image" src="https://user-images.githubusercontent.com/121243826/221764288-d18c3526-3611-47da-afe1-8c5355fcb890.png">
+
