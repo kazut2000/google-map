@@ -62,3 +62,21 @@ const center = {
 最初にCI/CDを構築したので、発表前にデプロイで焦ることがありませんでした。
 <img width="960" alt="image" src="https://user-images.githubusercontent.com/121243826/221764288-d18c3526-3611-47da-afe1-8c5355fcb890.png">
 
+## 躓いたところ
+### 1つ目
+【Issue】
+開発環境ではクリアなMAPが表示されるのに、本番環境で「for development purposes only」という透かし入りの、暗い地図または白黒反転のストリートビュー画像が表示した。
+【原因】
+本番環境にAPIキーの環境変数を設定していなかった。
+【解決方法】
+本番環境のサーバーにも環境変数の設定をした！
+![image](https://user-images.githubusercontent.com/121243826/221765456-8a6d45b4-cfd5-4cae-b395-de869b778490.png)
+
+
+### 2つ目
+【問題】
+google map api のInfoWindow, Marker がコードがあってるはずなのに動かなかった
+【原因】
+reactの開発モードだと2回レンダリングされてしまうため
+【解決法】
+reactのstrictモードを停止した
