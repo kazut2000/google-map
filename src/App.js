@@ -1,21 +1,18 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, InfoWindow } from '@react-google-maps/api';
-import Drawer from '@mui/material/Drawer';
-import Box from '@mui/system/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import React, { useEffect, useState } from "react";
+import { GoogleMap, LoadScript, InfoWindow } from "@react-google-maps/api";
+import { Button, TextField, Box, Drawer } from "@mui/material";
 
 // Mapの画面サイズを全画面に設定
 const containerStyle = {
-  width: '100%',
-  height: '100vh'
+  width: "100%",
+  height: "100vh",
 };
 
 // Mapの中心を九州工業大学に設定
 const center = {
-  lat: 33.6537,
-  lng: 130.6722,
+  lat: 33.6537, // 緯度
+  lng: 130.6722, // 経度
 };
 
 // InfoWindowのスタイルの設定
@@ -25,27 +22,36 @@ const divStyle = {
 };
 
 export const App = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [locations, setLocations] = useState({});
-  const [open, setOpen] = useState(false);
+  const [openLeft, setOpenLeft] = useState(false);
+  const [openRight, setOpenRight] = useState(false);
   const [restaurant, setRestaurant] = useState({});
   const [rsreviews, setRsreviews] = useState({});
 
-  const toggleOpen = (id, name) => {
-    setOpen(!open);
-    open ? setRestaurant({}) : setRestaurant({ id, name });
-    if (!open) { getRsreview(id); }
-  }
+  //左のサイドバーを開く
+  const toggleOpenLeft = (id, name) => {
+    setOpenLeft(!openLeft);
+    openLeft ? setRestaurant({}) : setRestaurant({ id, name });
+    if (!openLeft) {
+      getRsreview(id);
+    }
+  };
+
+  //右のサイドバーを開く
+  const toggleOpenRight = () => {
+    setOpenRight(!openRight);
+  };
 
   // APIからlocationを取得する関数
   const getLocation = async () => {
     const response = await fetch(
       "https://real-hound-51.hasura.app/api/rest/location",
       {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'x-hasura-admin-secret' : `${process.env.REACT_APP_ID_TOKEN}`
+          "Content-Type": "application/json",
+          "x-hasura-admin-secret": `${process.env.REACT_APP_ID_TOKEN}`,
         },
       }
     ).then((response) => response.json());
@@ -57,10 +63,10 @@ export const App = () => {
     const response = await fetch(
       `https://real-hound-51.hasura.app/api/rest/rsreview?_eq=${locations_id}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'x-hasura-admin-secret' : `${process.env.REACT_APP_ID_TOKEN}`
+          "Content-Type": "application/json",
+          "x-hasura-admin-secret": `${process.env.REACT_APP_ID_TOKEN}`,
         },
       }
     ).then((response) => response.json());
@@ -72,53 +78,71 @@ export const App = () => {
     const response = await fetch(
       `https://real-hound-51.hasura.app/api/rest/rsreview?comment=${comment}&locations_id=${locations_id}`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'x-hasura-admin-secret' : `${process.env.REACT_APP_ID_TOKEN}`
+          "Content-Type": "application/json",
+          "x-hasura-admin-secret": `${process.env.REACT_APP_ID_TOKEN}`,
         },
       }
     ).then((response) => response.json());
-    toggleOpen();
+    toggleOpenLeft();
   };
 
   useEffect(() => {
-    getLocation()
-  }, [])
+    getLocation();
+  }, []);
 
   return (
     <>
-      <LoadScript
-        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}
-      >
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={15}
+      <Box sx={{ position: "relative" }}>
+        <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={15}
+          >
+            {Object.keys(locations).length &&
+              locations.map((place, index) => {
+                return (
+                  <div
+                    onClick={() => {
+                      toggleOpenLeft(place.id, place.name);
+                    }}
+                    key={index}
+                  >
+                    <InfoWindow
+                      position={{
+                        lat: Number(place.lat_location),
+                        lng: Number(place.lng_location),
+                      }}
+                    >
+                      <div style={divStyle}>
+                        <h1>{place.name}</h1>
+                      </div>
+                    </InfoWindow>
+                  </div>
+                );
+              })}
+          </GoogleMap>
+        </LoadScript>
+        <Button
+          sx={{
+            position: "absolute",
+            right: 0,
+            top: 50,
+          }}
+          variant="contained"
+          onClick={toggleOpenRight}
         >
-          {
-            Object.keys(locations).length && locations.map((place, index) => {
-              return (
-                <div onClick={()=>{toggleOpen(place.id,place.name)}} key={index}>
-                  <InfoWindow position={{lat: Number(place.lat_location), lng: Number(place.lng_location)}}>
-                    <div style={divStyle}>
-                      <h1>{place.name}</h1>
-                    </div>
-                  </InfoWindow>
-                </div>
-              )
-            })
-          }
-        </GoogleMap>
-      </LoadScript>
+          場所を追加
+        </Button>
+      </Box>
 
-      <Drawer anchor='left' open={open} onClose={toggleOpen}>
-        <Box sx={{ width: '30vw'}}></Box>
-        <Box sx={{ fontSize: 'h2.fontSize', mx: 'auto' }}>
-        {restaurant.name}
-        </Box>
+      <Drawer anchor="left" open={openLeft} onClose={toggleOpenLeft}>
+        <Box sx={{ width: "30vw" }}></Box>
+        <Box sx={{ fontSize: "h.fontSize", mx: "auto" }}>{restaurant.name}</Box>
         <Box sx={{ border: 1 }} />
-        <Box sx={{mx: 'auto' }}>
+        <Box sx={{ mx: "auto" }}>
           <TextField
             id="filled-textarea"
             label="Multiline Placeholder"
@@ -129,25 +153,41 @@ export const App = () => {
           />
         </Box>
         <Button
-          onClick={() => {postRsreview(value,restaurant.id)}}
+          onClick={() => {
+            postRsreview(value, restaurant.id);
+          }}
         >
           POST
         </Button>
         <Box sx={{ border: 1 }} />
-        {
-            Object.keys(rsreviews).length && rsreviews.map((reviews, index) => {
-              return (
-                <div key={index}>
-                  <Box sx={{ p: 2, border: '1px dashed grey' }}>
-                    {reviews.comment}
-                  </Box>
-                </div>
-              )
-            })
-          }
+        {Object.keys(rsreviews).length &&
+          rsreviews.map((reviews, index) => {
+            return (
+              <div key={index}>
+                <Box sx={{ p: 2, border: "1px dashed grey" }}>
+                  {reviews.comment}
+                </Box>
+              </div>
+            );
+          })}
+      </Drawer>
+
+      <Drawer anchor="right" open={openRight} onClose={toggleOpenRight}>
+        <p>店の名前</p>
+        <Box sx={{ width: "20vw" }}></Box>
+        <Box sx={{ mx: "auto" }}>
+          <TextField
+            id="filled-textarea"
+            label="Multiline Placeholder"
+            placeholder="Placeholder"
+            multiline
+            variant="filled"
+            onChange={(event) => setValue(event.target.value)}
+          />
+        </Box>
       </Drawer>
     </>
-  )
-}
+  );
+};
 
 export default App;
