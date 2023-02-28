@@ -30,6 +30,15 @@ You may also see any lint errors in the console.
 - Google Map APIを使用しました。
 - サイドバーやMap上のボタンを表示するのにマテリアルUIを使用しました。
 
+- 九工大生なら母校の緯度経度はご存じですよね。
+```
+// Mapの中心を九州工業大学に設定
+const center = {
+  lat: 33.6537, // 緯度
+  lng: 130.6722, // 経度
+};
+```
+
 ### サーバー
 - locationsテーブル
 
