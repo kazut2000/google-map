@@ -56,6 +56,8 @@ const center = {
   | id | integer | Primary Key |
   | locations_id | integer | Foreign Keys |
   | comment | text | - |
+  
+![スクリーンショット 2023-02-28 14 51 59](https://user-images.githubusercontent.com/89256544/221766034-6ce15ccb-35ac-4345-99a2-54a657acdf65.png)
 
 ### インフラ
 初めてでも簡単にデプロイできるVercelにReactをデプロイしました。  
