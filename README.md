@@ -4,6 +4,13 @@
 行動範囲が狭く、自炊ばかりで外食をあまりしない。美味しいお店を九工大生で共有できるサービスを作りたい！
 
 ## 使い方
+- 環境変数
+```
+REACT_APP_ID_TOKEN=""
+REACT_APP_GOOGLE_MAP_API_KEY=""
+```
+
+- サーバ起動
 ```
 npm install
 npm start
