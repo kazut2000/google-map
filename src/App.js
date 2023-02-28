@@ -11,8 +11,8 @@ const containerStyle = {
 
 // Mapの中心を九州工業大学に設定
 const center = {
-  lat: 33.6537,
-  lng: 130.6722,
+  lat: 33.6537, // 緯度
+  lng: 130.6722, // 経度
 };
 
 // InfoWindowのスタイルの設定
