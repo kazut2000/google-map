@@ -24,16 +24,23 @@ const divStyle = {
 export const App = () => {
   const [value, setValue] = useState("");
   const [locations, setLocations] = useState({});
-  const [open, setOpen] = useState(false);
+  const [openLeft, setOpenLeft] = useState(false);
+  const [openRight, setOpenRight] = useState(false);
   const [restaurant, setRestaurant] = useState({});
   const [rsreviews, setRsreviews] = useState({});
 
-  const toggleOpen = (id, name) => {
-    setOpen(!open);
-    open ? setRestaurant({}) : setRestaurant({ id, name });
-    if (!open) {
+  //左のサイドバーを開く
+  const toggleOpenLeft = (id, name) => {
+    setOpenLeft(!openLeft);
+    openLeft ? setRestaurant({}) : setRestaurant({ id, name });
+    if (!openLeft) {
       getRsreview(id);
     }
+  };
+
+  //右のサイドバーを開く
+  const toggleOpenRight = () => {
+    setOpenRight(!openRight);
   };
 
   // APIからlocationを取得する関数
@@ -78,7 +85,7 @@ export const App = () => {
         },
       }
     ).then((response) => response.json());
-    toggleOpen();
+    toggleOpenLeft();
   };
 
   useEffect(() => {
@@ -99,7 +106,7 @@ export const App = () => {
                 return (
                   <div
                     onClick={() => {
-                      toggleOpen(place.id, place.name);
+                      toggleOpenLeft(place.id, place.name);
                     }}
                     key={index}
                   >
@@ -122,16 +129,16 @@ export const App = () => {
           sx={{
             position: "absolute",
             right: 0,
-            // bottom: 0,
             top: 50,
           }}
           variant="contained"
+          onClick={toggleOpenRight}
         >
           場所を追加
         </Button>
       </Box>
 
-      <Drawer anchor="left" open={open} onClose={toggleOpen}>
+      <Drawer anchor="left" open={openLeft} onClose={toggleOpenLeft}>
         <Box sx={{ width: "30vw" }}></Box>
         <Box sx={{ fontSize: "h.fontSize", mx: "auto" }}>{restaurant.name}</Box>
         <Box sx={{ border: 1 }} />
@@ -163,6 +170,21 @@ export const App = () => {
               </div>
             );
           })}
+      </Drawer>
+
+      <Drawer anchor="right" open={openRight} onClose={toggleOpenRight}>
+        <p>店の名前</p>
+        <Box sx={{ width: "20vw" }}></Box>
+        <Box sx={{ mx: "auto" }}>
+          <TextField
+            id="filled-textarea"
+            label="Multiline Placeholder"
+            placeholder="Placeholder"
+            multiline
+            variant="filled"
+            onChange={(event) => setValue(event.target.value)}
+          />
+        </Box>
       </Drawer>
     </>
   );
